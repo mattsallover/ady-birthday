@@ -441,7 +441,7 @@ document.querySelectorAll('.cw-input').forEach(inp=>{
   const z = document.createElement('span');
   z.className = 'letter is-z';
   z.textContent = 'Z';
-  z.style.cssText = `left:${zLeft}%;top:${zTop}%;font-size:1.6rem;opacity:0.75;transform:rotate(${-15+Math.random()*30}deg)`;
+  z.style.cssText = `left:${zLeft}%;top:${zTop}%;font-size:1.9rem;opacity:0.85;transform:rotate(${-8+Math.random()*16}deg)`;
   const advance = e=>{
     e.stopPropagation();
     z.classList.add('found');
@@ -460,7 +460,7 @@ document.querySelectorAll('.cw-input').forEach(inp=>{
   const TARGET = 'BABYZINHA';
   const DECOYS = 'KCQMRWDTOELPXFUSVGJ';
   const isMobileGame = window.innerWidth <= 600;
-  const decoyCount = isMobileGame ? 7 : 13;
+  const decoyCount = isMobileGame ? 4 : 9;
   const letters = TARGET.split('');
   for(let i=0;i<decoyCount;i++) letters.push(DECOYS[Math.floor(Math.random()*DECOYS.length)]);
   for(let i=letters.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [letters[i],letters[j]]=[letters[j],letters[i]]; }
