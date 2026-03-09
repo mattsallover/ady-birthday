@@ -332,10 +332,7 @@ body{background:var(--ink);font-family:'Jost',sans-serif;color:var(--cream);min-
   <div class="coupon-grid" id="grid"></div>
 </section>
 
-<footer class="footer">
-  <p class="footer-quote">"Happy Birthday, Ady. Being with you is my favourite adventure."</p>
-  <p class="footer-sig">— Always yours ✦</p>
-</footer>
+<footer class="footer"></footer>
 
 <div class="toast" id="toast"></div>
 
