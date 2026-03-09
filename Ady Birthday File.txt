@@ -65,6 +65,24 @@ body{background:var(--ink);font-family:'Jost',sans-serif;color:var(--cream);min-
 .game-btns{display:flex;gap:12px;align-items:center}
 .game-error{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:rgba(232,196,184,.7);min-height:1.4em}
 
+/* Combination Lock */
+.lock-wrap{display:flex;flex-direction:column;align-items:center;gap:18px;padding:24px 16px;animation:fadeUp .6s ease forwards}
+.lock-dials{display:flex;gap:14px;justify-content:center}
+.dial{display:flex;flex-direction:column;align-items:center;gap:6px}
+.dial-arrow{background:transparent;border:1px solid rgba(201,168,76,.3);color:var(--gold);font-size:1rem;width:56px;height:36px;cursor:pointer;transition:background .2s,border-color .2s}
+.dial-arrow:hover{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.6)}
+.dial-window{width:56px;height:140px;overflow:hidden;border:1px solid rgba(201,168,76,.35);background:rgba(201,168,76,.04);position:relative}
+.dial-window::before,.dial-window::after{content:'';position:absolute;left:0;right:0;height:46px;pointer-events:none;z-index:1}
+.dial-window::before{top:0;background:linear-gradient(to bottom,rgba(30,26,22,.7),transparent)}
+.dial-window::after{bottom:0;background:linear-gradient(to top,rgba(30,26,22,.7),transparent)}
+.dial-strip{display:flex;flex-direction:column;transition:transform .25s cubic-bezier(.4,.2,.2,1);will-change:transform}
+.dial-strip.no-transition{transition:none}
+.dial-digit{width:56px;height:46px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;color:var(--ink-muted);flex-shrink:0}
+.dial-digit.active{color:var(--warm-white)}
+@keyframes dialFlash{0%{border-color:var(--gold);box-shadow:0 0 0 0 rgba(201,168,76,.6)}50%{border-color:var(--gold);box-shadow:0 0 20px 4px rgba(201,168,76,.4)}100%{border-color:var(--gold);box-shadow:0 0 0 0 rgba(201,168,76,0)}}
+.dial-window.unlocked{animation:dialFlash .6s ease forwards;border-color:var(--gold)}
+.dial-digit.unlocked{color:var(--gold)!important}
+
 /* Celebration */
 .celebration-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px;padding:40px 24px;animation:fadeUp .7s ease forwards}
 .cel-orn{width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
@@ -183,6 +201,13 @@ body{background:var(--ink);font-family:'Jost',sans-serif;color:var(--cream);min-
   .footer{padding:60px 24px calc(80px + env(safe-area-inset-bottom));padding-left:calc(24px + env(safe-area-inset-left));padding-right:calc(24px + env(safe-area-inset-right))}
   .toast{bottom:calc(16px + env(safe-area-inset-bottom));white-space:normal;text-align:center;max-width:80vw}
 
+  /* Lock dials */
+  .dial-arrow{width:64px;height:42px;font-size:1.1rem}
+  .dial-window{width:64px;height:156px}
+  .dial-window::before,.dial-window::after{height:52px}
+  .dial-digit{width:64px;height:52px;font-size:2rem}
+  .lock-dials{gap:10px}
+
   /* Touch feedback — active states */
   .letter:active{opacity:.8}
   .is-z:active{transform:scale(1.2)}
@@ -194,10 +219,15 @@ body{background:var(--ink);font-family:'Jost',sans-serif;color:var(--cream);min-
   .cw-btn:active{transform:scale(.95);background:var(--gold);color:var(--ink)}
   .rack-tile:active{transform:translateY(-4px) scale(.95);background:linear-gradient(135deg,#4a4030,#3a3020)}
   .word-slot.filled:active{transform:scale(.93);background:rgba(201,168,76,.2)}
+  .dial-arrow:active{transform:scale(.93);background:rgba(201,168,76,.15)}
 }
 @media(max-width:360px){
   .word-slot{width:29px;height:37px;font-size:.95rem}
   .rack-tile{width:34px;height:42px;font-size:.95rem}
+  .dial-arrow{width:56px}
+  .dial-window{width:56px}
+  .dial-digit{width:56px;font-size:1.6rem}
+  .lock-dials{gap:8px}
 }
 </style>
 </head>
@@ -243,8 +273,29 @@ body{background:var(--ink);font-family:'Jost',sans-serif;color:var(--cream);min-
     </div>
   </div>
 
-  <!-- Screen 2: Celebration -->
+  <!-- Screen 2: Combination Lock -->
   <div class="puzzle-screen" id="screen-2">
+    <div class="lock-wrap">
+      <div class="game-label">puzzle three</div>
+      <p class="game-hint">your favorite number</p>
+      <div class="lock-dials" id="lock-dials"></div>
+      <div class="game-btns">
+        <button class="btn-gold" id="lock-check-btn">Unlock ✦</button>
+      </div>
+      <p class="game-error" id="lock-error"></p>
+    </div>
+    <div class="codeword-nudge">
+      <span class="cw-link" onclick="toggleCW('cw2')">have a codeword?</span>
+      <div class="cw-row" id="cw2">
+        <input class="cw-input" id="cw2-input" type="text" placeholder="enter codeword..." autocomplete="off" spellcheck="false">
+        <button class="cw-btn" onclick="checkCW('cw2-input','cw2-error')">→</button>
+      </div>
+      <p class="cw-error" id="cw2-error"></p>
+    </div>
+  </div>
+
+  <!-- Screen 3: Celebration -->
+  <div class="puzzle-screen" id="screen-3">
     <div class="celebration-wrap">
       <div class="cel-orn"></div>
       <p class="cel-label">you did it, little Z</p>
@@ -532,6 +583,106 @@ document.querySelectorAll('.cw-input').forEach(inp=>{
       slotsEl.children[i].classList.remove('filled');
     }
     errorEl.textContent='';
+  });
+})();
+
+// Screen 2: Combination Lock
+(function(){
+  const COMBO = [0,9,7,2];
+  const dialsContainer = document.getElementById('lock-dials');
+  const errorEl = document.getElementById('lock-error');
+  const checkBtn = document.getElementById('lock-check-btn');
+  const currentValues = [0,0,0,0];
+
+  function getDigitHeight(){
+    return window.innerWidth <= 600 ? 52 : 46;
+  }
+
+  for(let d=0;d<4;d++){
+    const dial = document.createElement('div');
+    dial.className = 'dial';
+
+    const upBtn = document.createElement('button');
+    upBtn.className = 'dial-arrow dial-up';
+    upBtn.innerHTML = '&#9650;';
+
+    const win = document.createElement('div');
+    win.className = 'dial-window';
+
+    const strip = document.createElement('div');
+    strip.className = 'dial-strip';
+    strip.dataset.index = d;
+
+    // 12 digits: ghost 9, 0-9, ghost 0 — for seamless wrapping
+    for(let i=-1;i<=10;i++){
+      const span = document.createElement('div');
+      span.className = 'dial-digit';
+      span.textContent = ((i+10)%10).toString();
+      strip.appendChild(span);
+    }
+    win.appendChild(strip);
+
+    const downBtn = document.createElement('button');
+    downBtn.className = 'dial-arrow dial-down';
+    downBtn.innerHTML = '&#9660;';
+
+    dial.appendChild(upBtn);
+    dial.appendChild(win);
+    dial.appendChild(downBtn);
+    dialsContainer.appendChild(dial);
+
+    function positionStrip(value,animate){
+      const dh = getDigitHeight();
+      const index = value + 1;
+      const offset = -index * dh;
+      if(!animate) strip.classList.add('no-transition');
+      strip.style.transform = `translateY(${offset}px)`;
+      if(!animate){ strip.offsetHeight; strip.classList.remove('no-transition'); }
+      Array.from(strip.children).forEach((ch,i)=>{
+        ch.classList.toggle('active', i === value + 1);
+      });
+    }
+
+    function changeDigit(delta){
+      currentValues[d] = (currentValues[d] + delta + 10) % 10;
+      positionStrip(currentValues[d], true);
+      errorEl.textContent = '';
+    }
+
+    upBtn.addEventListener('click', ()=>changeDigit(-1));
+    downBtn.addEventListener('click', ()=>changeDigit(1));
+
+    // Touch swipe on dial window
+    let touchStartY = 0, touchStartTime = 0;
+    win.addEventListener('touchstart', e=>{
+      touchStartY = e.touches[0].clientY;
+      touchStartTime = Date.now();
+    }, {passive:true});
+    win.addEventListener('touchend', e=>{
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      const dt = Date.now() - touchStartTime;
+      if(dt > 500 || Math.abs(dy) < 20) return;
+      changeDigit(dy > 0 ? -1 : 1);
+    });
+
+    positionStrip(0, false);
+  }
+
+  checkBtn.addEventListener('click', ()=>{
+    const correct = currentValues.every((v,i)=>v===COMBO[i]);
+    if(correct){
+      dialsContainer.querySelectorAll('.dial-window').forEach(w=>w.classList.add('unlocked'));
+      dialsContainer.querySelectorAll('.dial-digit.active').forEach(dd=>dd.classList.add('unlocked'));
+      errorEl.textContent = '✦ Unlocked.';
+      errorEl.style.color = 'rgba(201,168,76,.9)';
+      checkBtn.disabled = true;
+      setTimeout(()=>{ currentScreen=3; goToScreen(3); }, 1200);
+    } else {
+      dialsContainer.classList.add('shake');
+      setTimeout(()=>dialsContainer.classList.remove('shake'), 400);
+      errorEl.textContent = 'Wrong combination — try again.';
+      errorEl.style.color = 'rgba(232,196,184,.7)';
+    }
   });
 })();
 
