@@ -316,7 +316,7 @@ body{background:var(--ink);font-family:'Jost',sans-serif;color:var(--cream);min-
   <h1 class="cover-title">For <em>Z</em></h1>
   <div class="cover-divider"><span>✦</span></div>
   <p class="cover-msg">
-    You're turning 43, and this year you're getting 43 hours of curated, 'done for you' experiences. Consider it your very own concierge service, operated by someone who is 5'11½" and has a very different view of the world than you do. Specifically, I can reach things. Happy Birthday, little Z.
+    You're turning 43. By my math, 4 + 3 = 7, plus a 2-point bonus for putting up with me, which gives you exactly 9 curated, 'done for you' experiences. Consider it your very own concierge service, operated by someone who is 5'11½" and has a very different view of the world than you do. Specifically, I can reach things. Happy Birthday, little Z.
   </p>
   <div class="cover-cta">
     <a class="cover-btn" href="#book">Open Your Book</a>
@@ -341,31 +341,31 @@ body{background:var(--ink);font-family:'Jost',sans-serif;color:var(--cream);min-
 
 <script>
 const COUPONS = [
-  {category:"Self-Care",emoji:"💅",hours:6,title:"The Ultimate Beauty Day",
+  {category:"Self-Care",emoji:"💅",title:"The Ultimate Beauty Day",
    you:"Line up your hair & nail appointments on the same day.",
    me:"Provide the 'Mobile Lounge' with a chilled mimosa, handle all transportation, and run errands in between."},
-  {category:"Romance",emoji:"🍽️",hours:5,title:"The Golden Date Night",
+  {category:"Romance",emoji:"🍽️",title:"The Golden Date Night",
    you:"Pick one of 3 Houston vibes I present.",
    me:"Handle the scouting, the reservations, the timing, and the transportation."},
-  {category:"Just For You",emoji:"☀️",hours:8,title:"Your Kind of Sunday",
+  {category:"Just For You",emoji:"☀️",title:"Your Kind of Sunday",
    you:"Sleep in as late as you want and decide how to spend your free afternoon.",
    me:"Prepare & deliver breakfast in bed (with Kai's help) and keep the house running all day."},
-  {category:"Chef's Table",emoji:"🥘",hours:4,title:"The 'Z' Tasting Menu",
+  {category:"Chef's Table",emoji:"🥘",title:"The 'Z' Tasting Menu",
    you:"Select your preferred dishes from my 3-course GF/LF menu options.",
    me:"Handle the specialty shopping, the cooking, the wine pairing, and 100% of the cleanup."},
-  {category:"Mixology",emoji:"🍸",hours:3,title:"The Bespoke Home Bar",
+  {category:"Mixology",emoji:"🍸",title:"The Bespoke Home Bar",
    you:"Name your current craving — any cocktail.",
    me:"Hunt down the premium GF/LF ingredients & garnishes and serve as your private mixologist for the night."},
-  {category:"Adventure",emoji:"🎾",hours:2,title:"The Tennis Match",
+  {category:"Adventure",emoji:"🎾",title:"The Tennis Match",
    you:"Bring your A(dy)-game.",
    me:"Book the court and provide a fully distraction-free hitting partner."},
-  {category:"Family",emoji:"🤍",hours:6,title:"The Vovó Visit (VIP)",
+  {category:"Family",emoji:"🤍",title:"The Vovó Visit (VIP)",
    you:"Pick a time to catch up with your grandma.",
    me:"Provide her shuttle service and prepare Brazilian snacks & coffee for the visit."},
-  {category:"Nostalgia",emoji:"🇧🇷",hours:4,title:"A Taste of São Paulo",
+  {category:"Nostalgia",emoji:"🇧🇷",title:"A Taste of São Paulo",
    you:"Choose your nostalgic theme.",
    me:"Recreate the flavors you miss — 100% GF/LF — and handle all specialty prep and kitchen labor."},
-  {category:"Adventure",emoji:"🛍️",hours:5,title:"The Outlet Deal Hunter",
+  {category:"Adventure",emoji:"🛍️",title:"The Outlet Deal Hunter",
    you:"Pick the outlet center and decide which stores we hit.",
    me:"Act as Logistics Lead: drive the car, carry all the bags while you shop. Style advice provided free of charge."}
 ];
@@ -380,7 +380,6 @@ COUPONS.forEach((c,i) => {
   el.className = 'coupon';
   el.innerHTML = `<div class="coupon-inner">
     <div class="coupon-front">
-      <div class="hours-badge">${c.hours} hrs</div>
       <div>
         <span class="coupon-category">${c.category}</span>
         <span class="coupon-emoji">${c.emoji}</span>
