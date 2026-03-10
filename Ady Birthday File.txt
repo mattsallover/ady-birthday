@@ -316,7 +316,7 @@ body{background:var(--ink);font-family:'Jost',sans-serif;color:var(--cream);min-
   <h1 class="cover-title">For <em>Z</em></h1>
   <div class="cover-divider"><span>✦</span></div>
   <p class="cover-msg">
-    You're turning 43. By my math, 4 + 3 = 7, plus a 2-point bonus for putting up with me, which gives you exactly 9 curated, 'done for you' experiences. Happy Birthday, little Z.
+    You're turning 43. By my math, 4 + 3 = 7, plus a 3-point bonus for putting up with me, which gives you exactly 10 curated, 'done for you' experiences. Happy Birthday, little Z.
   </p>
   <div class="cover-cta">
     <a class="cover-btn" href="#book">Open Your Book</a>
@@ -364,7 +364,10 @@ const COUPONS = [
    me:"Match the food to the vibe — 100% GF/LF — and handle all specialty prep and kitchen labor."},
   {category:"Adventure",emoji:"🛍️",title:"The Outlet Deal Hunter",
    you:"Pick the outlet center and decide which stores we hit.",
-   me:"Drive the car, carry all the bags while you shop. Style advice provided free of charge."}
+   me:"Drive the car, carry all the bags while you shop. Style advice provided free of charge."},
+  {category:"Wildcard",emoji:"🎲",title:"The Mad-Libs Date",
+   you:"Fill in your blanks — no peeking at mine.",
+   me:"Fill in my blanks — no peeking at yours. We combine them and whatever chaos comes out, we do it. No take-backs."}
 ];
 
 // Build coupon grid
