@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-button,a,.letter,.is-z,.rack-tile,.word-slot,.coupon,.redeem-btn,.cw-btn,.cover-btn,.btn-gold,.btn-clear{touch-action:manipulation;-webkit-user-select:none;-webkit-touch-callout:none}
+button,a,.letter,.is-z,.rack-tile,.word-slot,.coupon,.redeem-btn,.cw-btn,.cover-btn,.btn-gold,.btn-clear,.falling-shoe{touch-action:manipulation;-webkit-user-select:none;-webkit-touch-callout:none}
 :root{
   --cream:#f8f3ec;--warm-white:#fdfaf6;
   --gold:#c9a84c;--gold-light:#e8d5a3;--gold-dark:#9a7a2e;
@@ -64,6 +64,25 @@ body{background:var(--ink);font-family:'Jost',sans-serif;color:var(--cream);min-
 .rack-tile.used{opacity:.2;cursor:default;pointer-events:none}
 .game-btns{display:flex;gap:12px;align-items:center}
 .game-error{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:rgba(232,196,184,.7);min-height:1.4em}
+
+/* Sole Collector */
+.sole-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding:24px 16px;animation:fadeUp .6s ease forwards;width:100%}
+.sole-arena{position:relative;width:100%;max-width:400px;height:60vh;overflow:hidden;border:1px solid rgba(201,168,76,.12);background:rgba(0,0,0,.15)}
+.sole-score{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold-light);letter-spacing:.1em}
+.sole-score span{color:var(--gold);font-weight:600}
+.falling-shoe{position:absolute;width:64px;height:74px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation;will-change:transform;transition:opacity .15s}
+.shoe-emoji{font-size:2rem;line-height:1}
+.shoe-sole{width:36px;height:6px;border-radius:3px;margin-top:2px}
+.shoe-sole.red{background:#c0392b;box-shadow:0 0 8px rgba(192,57,43,.4)}
+.shoe-sole.black{background:#2c2c2c}
+.falling-shoe.tapped{opacity:0;pointer-events:none}
+@keyframes shoeCorrect{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(0);opacity:0}}
+@keyframes shoeWrong{0%{transform:translateX(0)}25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-4px)}100%{transform:translateX(0)}}
+.falling-shoe.correct{animation:shoeCorrect .3s ease forwards}
+.falling-shoe.wrong{animation:shoeWrong .3s ease}
+.sole-complete{display:none;position:absolute;inset:0;background:rgba(30,26,22,.85);align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.sole-complete.visible{display:flex}
+.sole-complete-text{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--gold);font-style:italic}
 
 /* Combination Lock */
 .lock-wrap{display:flex;flex-direction:column;align-items:center;gap:18px;padding:24px 16px;animation:fadeUp .6s ease forwards}
@@ -201,6 +220,12 @@ body{background:var(--ink);font-family:'Jost',sans-serif;color:var(--cream);min-
   .footer{padding:60px 24px calc(80px + env(safe-area-inset-bottom));padding-left:calc(24px + env(safe-area-inset-left));padding-right:calc(24px + env(safe-area-inset-right))}
   .toast{bottom:calc(16px + env(safe-area-inset-bottom));white-space:normal;text-align:center;max-width:80vw}
 
+  /* Sole collector */
+  .sole-arena{height:55vh}
+  .falling-shoe{width:58px;height:68px}
+  .shoe-emoji{font-size:1.8rem}
+  .falling-shoe:active{transform:scale(.9)}
+
   /* Lock dials */
   .dial-arrow{width:64px;height:42px;font-size:1.1rem}
   .dial-window{width:64px;height:156px}
@@ -273,10 +298,32 @@ body{background:var(--ink);font-family:'Jost',sans-serif;color:var(--cream);min-
     </div>
   </div>
 
-  <!-- Screen 2: Combination Lock -->
+  <!-- Screen 2: Sole Collector -->
   <div class="puzzle-screen" id="screen-2">
-    <div class="lock-wrap">
+    <div class="sole-wrap">
       <div class="game-label">puzzle three</div>
+      <p class="game-hint">tap the red soles — avoid the fakes</p>
+      <p class="sole-score">collected: <span id="sole-count">0</span> / 8</p>
+      <div class="sole-arena" id="sole-arena">
+        <div class="sole-complete" id="sole-complete">
+          <p class="sole-complete-text">✦ She knows her Louboutins.</p>
+        </div>
+      </div>
+    </div>
+    <div class="codeword-nudge">
+      <span class="cw-link" onclick="toggleCW('cw3')">have a codeword?</span>
+      <div class="cw-row" id="cw3">
+        <input class="cw-input" id="cw3-input" type="text" placeholder="enter codeword..." autocomplete="off" spellcheck="false">
+        <button class="cw-btn" onclick="checkCW('cw3-input','cw3-error')">→</button>
+      </div>
+      <p class="cw-error" id="cw3-error"></p>
+    </div>
+  </div>
+
+  <!-- Screen 3: Combination Lock -->
+  <div class="puzzle-screen" id="screen-3">
+    <div class="lock-wrap">
+      <div class="game-label">puzzle four</div>
       <p class="game-hint">your favorite number</p>
       <div class="lock-dials" id="lock-dials"></div>
       <div class="game-btns">
@@ -294,8 +341,8 @@ body{background:var(--ink);font-family:'Jost',sans-serif;color:var(--cream);min-
     </div>
   </div>
 
-  <!-- Screen 3: Celebration -->
-  <div class="puzzle-screen" id="screen-3">
+  <!-- Screen 4: Celebration -->
+  <div class="puzzle-screen" id="screen-4">
     <div class="celebration-wrap">
       <div class="cel-orn"></div>
       <p class="cel-label">you did it, little Z</p>
@@ -585,7 +632,86 @@ document.querySelectorAll('.cw-input').forEach(inp=>{
   });
 })();
 
-// Screen 2: Combination Lock
+// Screen 2: Sole Collector
+(function(){
+  const arena = document.getElementById('sole-arena');
+  const countEl = document.getElementById('sole-count');
+  const completeEl = document.getElementById('sole-complete');
+  const GOAL = 8;
+  let collected = 0;
+  let gameOver = false;
+  let spawnTimer, fallInterval;
+
+  function startGame(){
+    collected = 0;
+    gameOver = false;
+    countEl.textContent = '0';
+    spawnTimer = setInterval(spawnShoe, 1200);
+    fallInterval = setInterval(moveShoes, 30);
+  }
+
+  function spawnShoe(){
+    if(gameOver) return;
+    const shoe = document.createElement('div');
+    shoe.className = 'falling-shoe';
+    const isReal = Math.random() < 0.4;
+    const maxLeft = arena.clientWidth - 64;
+    shoe.style.left = Math.floor(Math.random() * maxLeft) + 'px';
+    shoe.style.top = '-80px';
+    shoe.dataset.speed = (1.5 + Math.random() * 1.5).toFixed(2);
+    shoe.dataset.real = isReal ? '1' : '0';
+    shoe.innerHTML = `<span class="shoe-emoji">👠</span><div class="shoe-sole ${isReal ? 'red' : 'black'}"></div>`;
+
+    const tap = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if(gameOver || shoe.classList.contains('tapped')) return;
+      if(isReal){
+        shoe.classList.add('correct');
+        collected++;
+        countEl.textContent = collected;
+        setTimeout(()=>shoe.remove(), 300);
+        if(collected >= GOAL){
+          gameOver = true;
+          clearInterval(spawnTimer);
+          clearInterval(fallInterval);
+          completeEl.classList.add('visible');
+          setTimeout(()=>{ currentScreen=3; goToScreen(3); }, 1500);
+        }
+      } else {
+        shoe.classList.add('wrong');
+        setTimeout(()=>shoe.classList.remove('wrong'), 300);
+      }
+    };
+    shoe.addEventListener('click', tap);
+    shoe.addEventListener('touchend', tap);
+    arena.appendChild(shoe);
+  }
+
+  function moveShoes(){
+    if(gameOver) return;
+    const shoes = arena.querySelectorAll('.falling-shoe:not(.tapped):not(.correct)');
+    shoes.forEach(shoe=>{
+      const top = parseFloat(shoe.style.top) + parseFloat(shoe.dataset.speed);
+      if(top > arena.clientHeight){
+        shoe.remove();
+      } else {
+        shoe.style.top = top + 'px';
+      }
+    });
+  }
+
+  // Start when screen becomes active
+  const observer = new MutationObserver(()=>{
+    const screen = document.getElementById('screen-2');
+    if(screen.classList.contains('active') && !gameOver && collected === 0){
+      setTimeout(startGame, 600);
+    }
+  });
+  observer.observe(document.getElementById('screen-2'), {attributes:true, attributeFilter:['class']});
+})();
+
+// Screen 3: Combination Lock
 (function(){
   const COMBO = [0,9,7,2];
   const dialsContainer = document.getElementById('lock-dials');
@@ -675,7 +801,7 @@ document.querySelectorAll('.cw-input').forEach(inp=>{
       errorEl.textContent = '✦ Unlocked.';
       errorEl.style.color = 'rgba(201,168,76,.9)';
       checkBtn.disabled = true;
-      setTimeout(()=>{ currentScreen=3; goToScreen(3); }, 1200);
+      setTimeout(()=>{ currentScreen=4; goToScreen(4); }, 1200);
     } else {
       dialsContainer.classList.add('shake');
       setTimeout(()=>dialsContainer.classList.remove('shake'), 400);
